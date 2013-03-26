@@ -19,7 +19,10 @@ dispatch_table = {}
 
 def dispatch(cmd, *args):
 	if dispatch_table.has_key(cmd):
-		dispatch_table[cmd](*args)
+		try:
+			dispatch_table[cmd](*args)
+		except Exception as e:
+			state['msg'] = cmd+" failed" + "".join([" : " +str(s) for s in e.args])
 	else:
 		state['msg'] = "Unrecognized command `" + cmd + "`"
 	print state['msg']
@@ -30,22 +33,7 @@ def dispatch(cmd, *args):
 
 def register(name):
 	def inner(f):
-		print "Registered " + f.__name__
 		dispatch_table[name] = f
-	return inner
-
-
-# Commands can also fail internally, e.g. if the parameters are
-# inappropriate. The simplest way to deal with this is to decorate
-# the command funcs with a try/except block, and then do assertions
-# internally.
-
-def protect(f):
-	def inner(*args):
-		try:
-			f(*args)
-		except Exception as e:
-			state['msg'] = "Failed: " + str(e.args)
 	return inner
 
 
@@ -58,7 +46,6 @@ def protect(f):
 # dictionary unless there is a REALLY good reason not to.
 
 @register("geometry")
-@protect
 def geom_cmd(*args):
 	"""Show the current truss geometry."""
 
@@ -67,19 +54,17 @@ def geom_cmd(*args):
 
 
 @register("stress")
-@protect
 def stress_cmd(*args):
 	"""Plot the stress in each member."""
 
 	import random
 	state['vis'] = deepcopy(state['geom'])
 	for m in state['vis']['edges']:
-		m['color'] = "" + hex(random.randint(0,255))[2:4] + "0000"
+		m['color'] = "#" + hex(random.randint(50,255))[2:4] + "0000"
 	state['msg'] = "Showing stress distribution."
 
 
 @register("load")
-@protect
 def load_cmd(*args):
 	"""Loads truss f from disk."""
 
@@ -90,7 +75,6 @@ def load_cmd(*args):
 
 
 @register("help")
-@protect
 def help_cmd(*args):
 	""" Get help for a specified command. """
 
@@ -102,6 +86,6 @@ def help_cmd(*args):
 		# Help string doubles as docstring
 		state['msg'] = dispatch_table[args[0]].__doc__
 	else:
-		state['msg'] = str(args[0]) + ": command not valid."
+		state['msg'] = str(args[0]) + ": command not found."
 	
 

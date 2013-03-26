@@ -53,7 +53,7 @@
                             type:"POST", 
                             contentType:"text/plain",
                             dataType:"json",
-                            data:'{"line":"'+line+'"}',
+                            data: JSON.stringify({'line':line}),
                             success: function(data){
                                 console.log("Updating SVG");
                                 controller2.commandResult("==> "+data['msg']);
@@ -71,7 +71,7 @@
                 promptHistory:true,
                 welcomeMessage:'Welcome to TrussViz.'
             });
-            controller2.promptText('load');
+            controller2.promptText('load test.json');
         });
     </script>
 
@@ -127,6 +127,9 @@
             update_svg = function(members, interfaces){
 
                 svg = d3.select("svg");
+                svg.selectAll("line").remove()
+                svg.selectAll("circle").remove()
+
                 svg.selectAll("line")
                     .data(members)
                     .enter()
@@ -134,7 +137,6 @@
                     .attr("stroke-width", 5)
                     .attr("stroke", function(d,i) {
                         color = d["color"]
-                        console.log(d)
                         if (color){
                             return color;
                         }
