@@ -1,5 +1,6 @@
 
 from copy import deepcopy
+import json
 
 
 
@@ -9,7 +10,7 @@ from copy import deepcopy
 state = {"geom" : {"nodes":[], "edges":[]}, 
 		 "vis"  : {"nodes":[], "edges":[]},
 		 "bcs"  : {"fixednodes":[], "loadednodes":[], "loadededges":[]},
-		 "msg"  : "" }
+		 "msg"  :  "" }
 
 # Our command interpreter picks up a command and an argument list, 
 # and calls the function mapped to the command in a dispatch table.
@@ -33,6 +34,21 @@ def register(name):
 		dispatch_table[name] = f
 	return inner
 
+
+# Commands can also fail internally, e.g. if the parameters are
+# inappropriate. The simplest way to deal with this is to decorate
+# the command funcs with a try/except block, and then do assertions
+# internally.
+
+def protect(f):
+	def inner(*args):
+		try:
+			f(*args)
+		except Exception as e:
+			state['msg'] = "Failed: " + str(e.args)
+	return inner
+
+
 # Commands are defined here. 
 
 # Each command has its own method. 
@@ -42,6 +58,7 @@ def register(name):
 # dictionary unless there is a REALLY good reason not to.
 
 @register("geometry")
+@protect
 def geom_cmd(*args):
 	"""Show the current truss geometry."""
 
@@ -50,6 +67,7 @@ def geom_cmd(*args):
 
 
 @register("stress")
+@protect
 def stress_cmd(*args):
 	"""Plot the stress in each member."""
 
@@ -61,16 +79,18 @@ def stress_cmd(*args):
 
 
 @register("load")
+@protect
 def load_cmd(*args):
 	"""Loads truss f from disk."""
 
-	from hardcoded import truss
-	state['geom'] = truss
-	state['vis'] = deepcopy(state['geom'])
-	state['msg'] = "Loaded sample truss."
+	with (open("models/"+args[0])) as f:
+		data = f.readlines()
+		state.update(json.JSONDecoder().decode(data[0]))
+		state['msg'] = "Loaded truss at: " + args[0]
 
 
 @register("help")
+@protect
 def help_cmd(*args):
 	""" Get help for a specified command. """
 
@@ -78,7 +98,7 @@ def help_cmd(*args):
 		# Print a long list of commands
 		from hardcoded import helpmsg
 		state['msg'] = helpmsg
-	elif helpstrings.has_key(args[0]):
+	elif dispatch_table.has_key(args[0]):
 		# Help string doubles as docstring
 		state['msg'] = dispatch_table[args[0]].__doc__
 	else:

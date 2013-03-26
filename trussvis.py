@@ -4,6 +4,7 @@ from flask import Flask, request, render_template
 import json
 import sys
 import argparse
+import brain
 
 app = Flask(__name__)
 
@@ -11,10 +12,11 @@ app = Flask(__name__)
 def trussvis():
 
     data = json.JSONDecoder().decode(request.data)
-    print "received "+str(data)
+    print "> "+data['line']
+    brain.dispatch(*data['line'].split())
 
-    returndata = json.JSONEncoder().encode({"result":"Noop `"+data['line']+"` successful.", "members":33, "interfaces":44})
-    print "returning "+returndata
+    returndata = json.JSONEncoder().encode(brain.state)
+    print "--> "+brain.state['msg']
     return returndata
 
 
