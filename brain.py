@@ -64,6 +64,44 @@ def stress_cmd(*args):
 	state['msg'] = "Showing stress distribution."
 
 
+@register("node")
+def node_cmd(*args):
+	"""	Node (coords): Add a new pinned joint. """
+	x = float(args[0])
+	y = float(args[1])
+
+	nodes = state['geom']['nodes']
+	nodes.append({"iid":len(nodes), "x":x, "y":y})
+	state['vis'] = deepcopy(state['geom'])
+	state['msg'] = "Successfully added node."
+
+
+@register("edge")
+def edge_cmd(*args):
+	"""edge (j1, j2): Add a new (pinned) member connecting two joints."""
+
+	i0 = int(args[0][1:])
+	i1 = int(args[1][1:])
+
+	edges = state['geom']['edges']
+	edges.append({"mid":len(edges), "i0":i0, "i1":i1})
+	state['vis'] = deepcopy(state['geom'])
+	state['msg'] = "Successfully added edge."
+
+
+@register("delete")
+def del_cmd(*args):
+	"""del entity: Deletes the selected node or edge."""
+
+	# if args[0][0] == "e":
+	# 	# delete an edge
+
+	# else:
+	# 	# delete a node
+	# 	i = int(args[0][1:])
+	state['msg'] = "Too much trouble."
+
+
 @register("load")
 def load_cmd(*args):
 	"""Loads truss f from disk."""
@@ -72,6 +110,16 @@ def load_cmd(*args):
 		data = f.readlines()
 		state.update(json.JSONDecoder().decode(data[0]))
 		state['msg'] = "Loaded truss at: " + args[0]
+
+
+@register("save")
+def load_cmd(*args):
+	"""save f: Save truss under filename f."""
+
+	with (open("models/"+args[0], "w")) as f:
+		data = json.JSONEncoder().encode(state)
+		f.write(data)
+		state['msg'] = "Saved truss to: " + args[0]
 
 
 @register("help")

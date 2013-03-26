@@ -55,7 +55,6 @@
                             dataType:"json",
                             data: JSON.stringify({'line':line}),
                             success: function(data){
-                                console.log("Updating SVG");
                                 controller2.commandResult("==> "+data['msg']);
                                 update_svg(data['vis']['edges'], data['vis']['nodes']);
                                 },
@@ -124,7 +123,19 @@
 
         <script type="text/javascript">
 
+            svg = d3.select("svg");
+
+            svg.selectAll("rect").on("click", function(d){
+                var mouse = d3.mouse(this);
+                controller2.typer.consoleInsert(" "+mouse[0] + " "+mouse[1]);
+                console.log("click"+mouse);
+
+                });
+
+
             update_svg = function(members, interfaces){
+                // Redo this with object constancy
+                // http://mbostock.github.com/d3/tutorial/bar-2.html
 
                 svg = d3.select("svg");
                 svg.selectAll("line").remove()
@@ -154,7 +165,11 @@
                         })
                     .attr("y2", function(d, i) {
                         return interfaces[d["i1"]]["y"]*-20 + 150;
+                        })
+                    .on("click", function(d) { 
+                        controller2.typer.consoleInsert(" e"+d['mid']);
                         });
+;
 
                 svg.selectAll("circle")
                     .data(interfaces)
@@ -167,8 +182,11 @@
                         })
                     .attr("cy", function(d, i) {
                         return d["y"]*-20 + 150;
+                        })
+                    .on("click", function(d) { 
+                        controller2.typer.consoleInsert(" n"+d['iid']);
+                        //d['iid']);
                         });
-
                 }
             
             // Your beautiful D3 code will go here
