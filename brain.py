@@ -128,8 +128,9 @@ def help_cmd(*args):
 
 	if not args:
 		# Print a long list of commands
-		from hardcoded import helpmsg
-		state['msg'] = helpmsg
+		state['msg'] = "Available commands:\n" + \
+					   " ".join(dispatch_table.keys()) + \
+					   "\nType `help cmd` for more info."
 	elif dispatch_table.has_key(args[0]):
 		# Help string doubles as docstring
 		state['msg'] = dispatch_table[args[0]].__doc__
