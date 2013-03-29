@@ -125,6 +125,15 @@
 
             svg = d3.select("svg");
 
+            xscale = d3.scale.linear()
+                    .domain([-10, 20])
+                    .range([0, 600]);
+            yscale = d3.scale.linear()
+                    .domain([-10, 10])
+                    .range([0, 400]);
+
+
+
             svg.selectAll("rect").on("click", function(d){
                 var mouse = d3.mouse(this);
                 controller2.typer.consoleInsert(" "+mouse[0] + " "+mouse[1]);
@@ -169,7 +178,7 @@
                     .on("click", function(d) { 
                         controller2.typer.consoleInsert(" e"+d['mid']);
                         });
-;
+
 
                 svg.selectAll("circle")
                     .data(interfaces)
