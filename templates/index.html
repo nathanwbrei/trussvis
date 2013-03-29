@@ -55,7 +55,7 @@
                             dataType:"json",
                             data: JSON.stringify({'line':line}),
                             success: function(data){
-                                controller2.commandResult("==> "+data['msg']);
+                                controller2.commandResult(data['msg']);
                                 update_svg(data['vis']['edges'], data['vis']['nodes']);
                                 },
                             error:function(a,b,c){console.log("FAILED"+c)}});
@@ -86,7 +86,7 @@
           div.console2 div.jquery-console-focus span.jquery-console-cursor
            { background:#333; color:#eee; font-weight:bold }
           div.console2 div.jquery-console-message-error
-           { color:#ef0505; font-family:sans-serif; font-weight:bold;
+           { color:#ef0505; font-family:monospace; font-weight:bold;
              padding:0.1em; }
           div.console2 div.jquery-console-message-success
            { color:#187718; font-family:monospace;
@@ -177,7 +177,9 @@
                         })
                     .on("click", function(d) { 
                         controller2.typer.consoleInsert(" e"+d['mid']);
-                        });
+                        })
+                    .on("mouseout", function(d) {d3.select(this).attr("stroke", d["color"] ? d["color"] : "white")})
+                    .on("mouseover", function() {d3.select(this).attr("stroke","red")});
 
 
                 svg.selectAll("circle")
@@ -195,7 +197,10 @@
                     .on("click", function(d) { 
                         controller2.typer.consoleInsert(" n"+d['iid']);
                         //d['iid']);
-                        });
+                        })
+                    .on("mouseout", function(d) {d3.select(this).attr("fill", "white")})
+                    .on("mouseover", function() {d3.select(this).attr("fill","red")});
+
                 }
             
             // Your beautiful D3 code will go here
