@@ -31,17 +31,20 @@ state2 = {"geom":{"nodes": [{"iid":0, "x":0, "y":2},
 
 # atca_cmd(state2) should return [0 1 0 -1 0 0; 0 0 0 1 0 -1]
 
-def atan(x0, y0, x1, y1):
-	if x0 == x1 and y0 < y1:
-		return math.pi/2
-	if x0 == x1 and y0 > y1:
-		return -math.pi/2
-	else:
-		return math.atan((y0 - y1)/(x0 - x1))
+def get_annotated_stresses(state):
+	A = make_difference_matrix(state)
+	C = make_constitutive_matrix(state)
+	f = make_balance_vector(state)
+	K = prune_K(state, A, C)
+	f = prune_f(state, f)
+
+	u = solve_atca(K, f)
+
+	return state
 
 
-# @register("straess")
-def atca_cmd(state):
+def make_difference_matrix(state):
+
 	edges, nodes = state["geom"]["edges"], state["geom"]["nodes"]
 
 	# Node displacements u => Edge elongations d
@@ -54,7 +57,7 @@ def atca_cmd(state):
 		i1y = nodes[e['i1']]['y']
 
 		# deal with i0
-		theta = atan(i0x, i0y, i1x, i1y)
+		theta = math.atan2(i0y-i1y, i0x-i1x)
 		# deal with the u
 		A[e['mid']][2*e['i0']] = math.cos(theta)
 		# deal with the v
@@ -67,6 +70,11 @@ def atca_cmd(state):
 		# deal with the v
 		A[e['mid']][2*e['i1']+1] = math.sin(theta)
 
+	return A
+
+
+# @register("straess")
+def atca_cmd(state):
 	#  Edge elongations d => Edge tensions w
 	C = numpy.zeros([len(edges), len(edges)])
 	for e in edges:
