@@ -22,6 +22,10 @@
     <link rel="stylesheet" href="static/stylesheets/skeleton.css">
     <link rel="stylesheet" href="static/stylesheets/layout.css">
 
+    <link rel="stylesheet" href="static/cons.css">
+    <link rel="stylesheet" href="static/vis.css">
+
+
     <!--[if lt IE 9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -37,62 +41,8 @@
     <script type="text/javascript" src="static/jquery/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="static/jquery/jquery.console.js"></script>
 
-    <script type="text/javascript">
-        $(document).ready(function(){
-            var console2 = $('<div class="console2">');
-            $('.feed').append(console2);
-            controller2 = console2.console({
-                promptLabel: '> ',
-                commandValidate:function(line){
-                    if (line == "") return false;
-                    else return true;
-                },
-                commandHandle:function(line){
-                    // var self = this;
-                    $.ajax( {url: "trussvis", 
-                            type:"POST", 
-                            contentType:"text/plain",
-                            dataType:"json",
-                            data: JSON.stringify({'line':line}),
-                            success: function(data){
-                                controller2.commandResult(data['msg']);
-                                update_svg(data['vis']['edges'], data['vis']['nodes']);
-                                },
-                            error:function(a,b,c){console.log("FAILED"+c)}});
-
-
-                    // try { var ret = eval(line);
-                    //     if (typeof ret != 'undefined') return ret.toString();
-                    //     else return true; }
-                    // catch (e) { return e.toString(); }
-                },
-                animateScroll:true,
-                promptHistory:true,
-                welcomeMessage:'Welcome to TrussViz.'
-            });
-            controller2.promptText('load test.json');
-        });
-    </script>
-
-
-    <style type="text/css" media="screen">
-          div.console2 { font-size: 14px; word-wrap:break-word; }
-          div.console2
-           { height:400px; overflow:auto }
-          div.jquery-console-inner
-           { padding:0.5em;}
-          div.console2 div.jquery-console-prompt-box
-           { color:#444; font-family:monospace; }
-          div.console2 div.jquery-console-focus span.jquery-console-cursor
-           { background:#333; color:#eee; font-weight:bold }
-          div.console2 div.jquery-console-message-error
-           { color:#ef0505; font-family:monospace; font-weight:bold;
-             padding:0.1em; }
-          div.console2 div.jquery-console-message-success
-           { color:#187718; font-family:monospace;
-             padding:0.1em; }
-          div.console2 span.jquery-console-prompt-label { font-weight:bold }
-    </style>
+    <script type="text/javascript" src="static/vis.js"></script>
+    <script type="text/javascript" src="static/cons.js"></script>
 
 </head>
 <body>
@@ -119,112 +69,6 @@
             </div>
         </div>
         <div class="one-third column feed"></div>
-
-
-        <script type="text/javascript">
-
-            svg = d3.select("svg")
-                .attr("viewBox", "0 0 " + 600 + " " + 400 )
-                .attr("preserveAspectRatio", "xMidYMid meet");
-
-
-            xscale = d3.scale.linear()
-                    .domain([-10, 20])
-                    .range([0, 600]);
-            yscale = d3.scale.linear()
-                    .domain([-10, 10])
-                    .range([400, 0]);
-
-            svg.selectAll("rect").on("click", function(d){
-                var mouse = d3.mouse(this);
-                var x = Math.round(xscale.invert(mouse[0])*1000)/1000;
-                var y = Math.round(yscale.invert(mouse[1])*1000)/1000;
-
-                controller2.typer.consoleInsert(" "+x+" "+y);
-                console.log("click"+mouse);
-
-                });
-
-
-            update_svg = function(members, interfaces){
-                // Redo this with object constancy
-                // http://mbostock.github.com/d3/tutorial/bar-2.html
-
-                // xmin = d3.min(interfaces, function(d){return d['x'];});
-                // xmax = d3.min(interfaces, function(d){return d['x'];});
-                // ymin = d3.min(interfaces, function(d){return d['y'];});
-                xmin = -10;
-                xmax = 20;
-                ymin = -5
-
-
-                xscale = d3.scale.linear()
-                            .domain([xmin, xmax])
-                            .range([0, 600]);
-                yscale = d3.scale.linear()
-                            .domain([ymin, 2/3*xmax+ymin])
-                            .range([400, 0]);
-
-                svg = d3.select("svg");
-                svg.selectAll("line").remove()
-                svg.selectAll("circle").remove()
-
-                svg.selectAll("line")
-                    .data(members)
-                    .enter()
-                    .append("line")
-                    .attr("stroke-width", 5)
-                    .attr("stroke", function(d,i) {
-                        color = d["color"]
-                        if (color){
-                            return color;
-                        }
-                        else
-                            return "white";
-                    })
-                    .attr("x1", function(d, i) {
-                        return xscale(interfaces[d["i0"]]["x"]);
-                        })
-                    .attr("y1", function(d, i) {
-                        return yscale(interfaces[d["i0"]]["y"]);
-                        })
-                    .attr("x2", function(d, i) {
-                        return xscale(interfaces[d["i1"]]["x"]);
-                        })
-                    .attr("y2", function(d, i) {
-                        return yscale(interfaces[d["i1"]]["y"]);
-                        })
-                    .on("click", function(d) { 
-                        controller2.typer.consoleInsert(" e"+d['mid']);
-                        })
-                    .on("mouseout", function(d) {d3.select(this).attr("stroke", d["color"] ? d["color"] : "white")})
-                    .on("mouseover", function() {d3.select(this).attr("stroke","red")});
-
-
-                svg.selectAll("circle")
-                    .data(interfaces)
-                    .enter()
-                    .append("circle")
-                    .attr("r", 5)
-                    .attr("fill", "white")
-                    .attr("cx", function(d, i) {
-                        return xscale(d["x"]);
-                        })
-                    .attr("cy", function(d, i) {
-                        return yscale(d["y"]);
-                        })
-                    .on("click", function(d) { 
-                        controller2.typer.consoleInsert(" n"+d['iid']);
-                        //d['iid']);
-                        })
-                    .on("mouseout", function(d) {d3.select(this).attr("fill", "white")})
-                    .on("mouseover", function() {d3.select(this).attr("fill","red")});
-
-                }
-            
-            // Your beautiful D3 code will go here
-        </script>
-
     </div><!-- container -->
 
 
