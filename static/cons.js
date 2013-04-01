@@ -16,7 +16,8 @@ $(document).ready(function(){
                     data: JSON.stringify({'line':line}),
                     success: function(data){
                         controller2.commandResult(data['msg']);
-                        update_svg(data['vis']['edges'], data['vis']['nodes']);
+                        state = data;
+                        redraw();
                         },
                     error:function(a,b,c){console.log("FAILED"+c)}});
 
@@ -40,7 +41,8 @@ send = function(s){
         data: JSON.stringify({'line':s}),
         success: function(data){
             console.log(data['msg']);
-            update_svg(data['vis']['edges'], data['vis']['nodes']);
+            state = data;
+            redraw();
             },
         error:function(a,b,c){console.log("FAILED"+c)}});
 } 
