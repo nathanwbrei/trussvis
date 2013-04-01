@@ -20,7 +20,6 @@ $(document).ready(function(){
                         },
                     error:function(a,b,c){console.log("FAILED"+c)}});
 
-
             // try { var ret = eval(line);
             //     if (typeof ret != 'undefined') return ret.toString();
             //     else return true; }
@@ -33,3 +32,15 @@ $(document).ready(function(){
     controller2.promptText('load test.json');
 });
 
+send = function(s){
+    $.ajax( {url: "trussvis", 
+        type:"POST", 
+        contentType:"text/plain",
+        dataType:"json",
+        data: JSON.stringify({'line':s}),
+        success: function(data){
+            console.log(data['msg']);
+            update_svg(data['vis']['edges'], data['vis']['nodes']);
+            },
+        error:function(a,b,c){console.log("FAILED"+c)}});
+} 

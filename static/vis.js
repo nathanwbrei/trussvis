@@ -1,17 +1,13 @@
 $(document).ready(function(){
+
+    width = 600;
+    height = 400;
+
     svg = d3.select("svg")
-        .attr("viewBox", "0 0 " + 600 + " " + 400 )
+        .attr("viewBox", "0 0 " + width + " " + height )
         .attr("preserveAspectRatio", "xMidYMid meet");
 
-
-    xscale = d3.scale.linear()
-            .domain([-10, 20])
-            .range([0, 600]);
-    yscale = d3.scale.linear()
-            .domain([-10, 10])
-            .range([400, 0]);
-
-    svg.selectAll("rect").on("click", function(d){
+    svg.selectAll(".background").on("click", function(d){
         var mouse = d3.mouse(this);
         var x = Math.round(xscale.invert(mouse[0])*1000)/1000;
         var y = Math.round(yscale.invert(mouse[1])*1000)/1000;
@@ -46,11 +42,11 @@ update_svg = function(members, interfaces){
     svg.selectAll("line").remove()
     svg.selectAll("circle").remove()
 
-    svg.selectAll("line")
+    svg.selectAll(".edge")
         .data(members)
         .enter()
         .append("line")
-        .attr("stroke-width", 5)
+        .attr("class", "edge")
         .attr("stroke", function(d,i) {
             color = d["color"]
             if (color){
@@ -71,19 +67,19 @@ update_svg = function(members, interfaces){
         .attr("y2", function(d, i) {
             return yscale(interfaces[d["i1"]]["y"]);
             })
-        .on("click", function(d) { 
+        .on("click", function(d) {
             controller2.typer.consoleInsert(" e"+d['mid']);
             })
         .on("mouseout", function(d) {d3.select(this).attr("stroke", d["color"] ? d["color"] : "white")})
         .on("mouseover", function() {d3.select(this).attr("stroke","red")});
 
 
-    svg.selectAll("circle")
+    svg.selectAll(".node")
         .data(interfaces)
         .enter()
         .append("circle")
+        .attr("class", "node")
         .attr("r", 5)
-        .attr("fill", "white")
         .attr("cx", function(d, i) {
             return xscale(d["x"]);
             })
@@ -94,8 +90,8 @@ update_svg = function(members, interfaces){
             controller2.typer.consoleInsert(" n"+d['iid']);
             //d['iid']);
             })
-        .on("mouseout", function(d) {d3.select(this).attr("fill", "white")})
-        .on("mouseover", function() {d3.select(this).attr("fill","red")});
+        .on("mouseout", function(d) {d3.select(this).attr("class", "node deselected")})
+        .on("mouseover", function() {d3.select(this).attr("class","node selected")});
 
     }
             
