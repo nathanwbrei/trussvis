@@ -1,5 +1,4 @@
 import numpy
-
 import sys
 sys.path.append('..')
 from trussmath import *
@@ -17,8 +16,8 @@ state2 = {"geom":{"nodes": [{"iid":0, "x":0, "y":2},
 		  						{"iid":2, "x":0, "y":1}]}}
 
 
-def test_make_graph_matrix():
+def test_make_difference_matrix():
 	
-	have = make_graph_matrix(state2).round()
+	have = make_difference_matrix(state2).round()
 	want = numpy.matrix('[0 1. 0 -1. 0 0.; 0 0. 0 1. 0 -1.]')
 	assert((have == want).all())
