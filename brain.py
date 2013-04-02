@@ -63,6 +63,17 @@ def stress_cmd(*args):
 		m['color'] = "#" + hex(random.randint(50,255))[2:4] + "0000"
 	state['msg'] = "Showing stress distribution."
 
+@register("move")
+def move_cmd(*args):
+	""" move (n x y): Change a node's location """
+	n = int(args[0][1:])
+	x = float(args[1])
+	y = float(args[2])
+	state['geom']['nodes'][n]['x'] = x
+	state['geom']['nodes'][n]['y'] = y
+	state['vis'] = deepcopy(state['geom'])
+	state['msg'] = "Successfully moved node."
+
 
 @register("node")
 def node_cmd(*args):
