@@ -16,7 +16,7 @@ svg .selected {
 }
 
 svg .unselected {
-    fill: white;
-    stroke: white;
+    fill: gray;
+    stroke: gray;
     stroke-width: 1;
 }

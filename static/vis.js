@@ -85,7 +85,7 @@ function redraw(){
                 return color;
             }
             else
-                return "white";
+                return "gray";
         })
         .attr("x1", function(d, i) {
             return xscale(state['vis']['nodes'][d["i0"]]["x"]);
