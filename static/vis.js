@@ -10,7 +10,7 @@ $(document).ready(function(){
     height = 400;
     svg = d3.select("svg")
         .attr("viewBox", "0 0 " + width + " " + height )
-        .attr("preserveAspectRatio", "xMidYMid meet");
+        .attr("preserveAspectRatio", "xMinYMin meet");
 
     // Set scales, somehow. This needs to be redone.
     // xmin = d3.min(interfaces, function(d){return d['x'];});
@@ -57,7 +57,7 @@ function redraw(){
                 return color;
             }
             else
-                return "white";
+                return "gray";
         })
         .attr("x1", function(d, i) {
             return xscale(state['vis']['nodes'][d["i0"]]["x"]);
