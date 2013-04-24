@@ -30,7 +30,7 @@ $(document).ready(function(){
         promptHistory:true,
         welcomeMessage:'Welcome to TrussViz.'
     });
-    controller2.promptText('load test.json');
+    controller2.promptText('open test.json');
 });
 
 send = function(s){
@@ -45,4 +45,5 @@ send = function(s){
             redraw();
             },
         error:function(a,b,c){console.log("FAILED"+c)}});
-} 
+}
+

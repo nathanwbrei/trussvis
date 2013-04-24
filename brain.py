@@ -60,7 +60,7 @@ def geom_cmd(*args):
 @register("new")
 def new_cmd(*args):
     print "NEW!"
-    state = deepcopy(empty_state)
+    #state = deepcopy(empty_state)
     state['msg'] = "Created new."
 
 @register("stress")
@@ -92,6 +92,11 @@ def move_cmd(*args):
 	state['vis'] = deepcopy(state['geom'])
 	state['msg'] = "Successfully moved node."
 
+
+@register("json")
+def json_cmd(*args):
+    from pprint import pformat
+    state['msg'] = "Current state is:\n"+pformat(state)
 
 @register("node")
 def node_cmd(*args):

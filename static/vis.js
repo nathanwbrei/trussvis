@@ -2,7 +2,7 @@
 $(document).ready(function(){
 
     // We store our entire state/data model here.
-    state = {"vis": {"nodes": [{"y": 0.0, "iid": 0, "x": 0.0}, {"y": 3.0, "iid": 1, "x": 2.0}, {"y": 0.0, "iid": 2, "x": 4.0}, {"y": 3.0, "iid": 3, "x": 6.0}, {"y": 0.0, "iid": 4, "x": 8.0}], "edges": [{"i1": 1, "i0": 0, "mid": 0, "color": "#760000"}, {"i1": 2, "i0": 1, "mid": 1, "color": "#360000"}, {"i1": 3, "i0": 2, "mid": 2, "color": "#960000"}, {"i1": 4, "i0": 3, "mid": 3, "color": "#3c0000"}, {"i1": 3, "i0": 1, "mid": 4, "color": "#cf0000"}, {"i1": 2, "i0": 0, "mid": 5, "color": "#930000"}, {"i1": 4, "i0": 2, "mid": 6, "color": "#970000"}]}, "geom": {"nodes": [{"y": 0.0, "iid": 0, "x": 0.0}, {"y": 3.0, "iid": 1, "x": 2.0}, {"y": 0.0, "iid": 2, "x": 4.0}, {"y": 3.0, "iid": 3, "x": 6.0}, {"y": 0.0, "iid": 4, "x": 8.0}], "edges": [{"i1": 1, "i0": 0, "mid": 0}, {"i1": 2, "i0": 1, "mid": 1}, {"i1": 3, "i0": 2, "mid": 2}, {"i1": 4, "i0": 3, "mid": 3}, {"i1": 3, "i0": 1, "mid": 4}, {"i1": 2, "i0": 0, "mid": 5}, {"i1": 4, "i0": 2, "mid": 6}]}, "msg": "Loaded truss at: test.json", "bcs": {"loadededges": [], "loadednodes": [], "fixednodes": []}}
+    state = {"vis": {"nodes": [], "edges": []}, "geom": {"nodes": [], "edges": []}, "msg":"", "bcs": {"loadededges": [], "loadednodes": [], "fixednodes": []}}
 
     // Set up SVG to resize responsively. 
     // We can now pretend that SVG is always 600x400. 
