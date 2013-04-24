@@ -10,20 +10,6 @@ import numpy
 # 		 "msg"  :  "" }
 
 
-state2 = {"geom":{"nodes": [{"iid":0, "x":0, "y":2},
-					{"iid":1, "x":0, "y":1},
-					{"iid":2, "x":0, "y":0}],
-			"edges": [{"mid":0, "i0":0, "i1":1},
-					{"mid":1, "i0":1, "i1":2}]},
-			"bcs":{"fixednodes": [{"iid":0, "fix":0},
-					{"iid":2, "fix":0},
-					{"iid":2, "fix":1}],
-				"loadednodes": [{"iid":0, "x":0, "y":1},
-					{"iid":1, "x":0, "y":1},
-					{"iid":2, "x":0, "y":1}]}}
-
-
-
 def make_difference_matrix(state):
 
 	edges, nodes = state["geom"]["edges"], state["geom"]["nodes"]
@@ -61,57 +47,82 @@ def make_constitutive_matrix(state):
 	for e in edges:
 		mid = e['mid']
 		# TODO: replace this with e.A * e.E / e.L
-		C[mid][mid] = 100.
+		C[mid][mid] = 1.
 	C = numpy.matrix(C)
 	return C
 
 
-def make_balance_vector(state):
-	# Construct external force vector f = Ku
-	nodes = state["geom"]["nodes"]
-	f = numpy.matrix(numpy.zeros(2*len(nodes))).transpose()
-	for b in state['bcs']['loadednodes']:
-		f[2*b['iid']] = b['x']
-		f[2*b['iid']+1] = b['y']
-	return f
 
-def make_stiffness_matrix(state, A, C):
-	# Construct stiffness matrix K = A'CA
-	return A.transpose() * C * A
+def apply_boundary_conditions(state, A, C):
+    """Returns stiffness matrix K=A'CA with columns rearranged
+    to handle boundary conditions. E.g. if node n is fixed in the x_0
+    direction, u[2n]=f_n0, not u_n0 (which is known to be zero).
+    This way we can solve for both the deflections and the reaction 
+    forces in one step. Described in HaSch notebook, Apr 24."""
+
+    # Calculate original (B.C.-agnostic) stiffness matrix
+    K = A.transpose() * C * A
 
 
-def prune_fixed_boundaries(state, K, f):
-	# Prune fixed nodes from system
-	delids = [2*n['iid']+n['fix'] for n in state['bcs']['fixednodes']]
-	Kp = numpy.delete(K, delids, 1)
-	fp = numpy.delete(f, delids, 0)
-	print "pruning fixed boundaries. was:"
-	print K.shape
-	print f.shape
-	print "is:"
-	print Kp.shape
-	print fp.shape
+    # Calculate the forcing vector
+    nodes = state["geom"]["nodes"]
+    f = numpy.matrix(numpy.zeros(2*len(nodes))).transpose()
+    for b in state['bcs']['loadednodes']:
+        f[2*b['iid']] += b['x']
+        f[2*b['iid']+1] += b['y']
+
+    # For each node fix, rearrange K
+    for node in state['bcs']['fixednodes']:
+        index = 2*node['iid']+node['fix']
+        
+        # Zero the corresponding column in K
+        K[:,index] = 0
+
+        # Make u[index] = f_index instead of 0
+        K[index,index] = -1
+
+    return K, f 
 
 
-	return Kp, fp
+
+def deflections_and_reactions(state, u):
+    """Splits the result vector u into two vectors, one describing the deflections
+    of the entire system, the other describing the reaction forces. """
+
+    deflections = u.copy()
+    reactions = numpy.zeros(u.shape)
+    for k in state['bcs']['fixednodes']:
+        f = deflections[2*k['iid']+k['fix']]
+        reactions[2*k['iid']+k['fix']] = f
+        deflections[2*k['iid']+k['fix']] = 0
+    return deflections, reactions
+
+        
+
+def statics(state):
+    """Returns all numerical results from the static analysis. This is used
+    by both the optimization backend and the visualization frontent."""
+
+    A = make_difference_matrix(state)
+    C = make_constitutive_matrix(state)
+    K,f = apply_boundary_conditions(state, A, C)
+#    u = numpy.linalg.solve(K, f)
+    u = numpy.linalg.pinv(K) * f
+    deflections, reactions = deflections_and_reactions(state, u)
+    stresses = C*A*deflections
+
+    return stresses, deflections, reactions    
 
 
-def deflections(K, f):
-	print K.shape
-	print f.shape
-	# Solve the damn thing
-	return numpy.linalg.pinv(K)*f
+def colorize(stress, maxstress):
+    grayness = hex(int(200*stress/maxstress+55))[2:]
+    if stress>0: 
+        return "#FF" + grayness + grayness
+#        return "#" + hex(int(255*stress/maxstress))[2:4] + "0000"
+    else:
+#        return "#0000" + hex(int(255*stress/maxstress))
+        return "#" + grayness + grayness + "FF"
 
 
-def get_annotated_stresses(state):
-
-	A = make_difference_matrix(state)
-	C = make_constitutive_matrix(state)
-	K = make_stiffness_matrix(state, A, C)
-	f = make_balance_vector(state)
-	K, f = prune_fixed_boundaries(state, K, f)
-	u = deflections(K, f)
-
-	return A, C, f, K, u
 
 	

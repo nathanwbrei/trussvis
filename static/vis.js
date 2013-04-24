@@ -74,7 +74,7 @@ function redraw(){
         .on("click", function(d) {
             controller2.typer.consoleInsert(" e"+d['mid']);
             })
-        .on("mouseout", function(d) {d3.select(this).attr("stroke", d["color"] ? d["color"] : "white")})
+        .on("mouseout", function(d) {d3.select(this).attr("stroke", d["color"] ? d["color"] : "gray")})
         .on("mouseover", function() {d3.select(this).attr("stroke","red")});
 
     // Nothing fancy for transitions or exits yet

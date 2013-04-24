@@ -7,10 +7,12 @@ import json
 # Keep all of our state here. We pass the entire thing to the 
 # frontend as JSON on each response.
 
-state = {"geom" : {"nodes":[], "edges":[]}, 
+empty_state = {"geom" : {"nodes":[], "edges":[]}, 
 		 "vis"  : {"nodes":[], "edges":[]},
 		 "bcs"  : {"fixednodes":[], "loadednodes":[], "loadededges":[]},
 		 "msg"  :  "" }
+
+state = deepcopy(empty_state)
 
 # Our command interpreter picks up a command and an argument list, 
 # and calls the function mapped to the command in a dispatch table.
@@ -45,6 +47,8 @@ def register(name):
 # right now. Side effects should be limited to the 'state'
 # dictionary unless there is a REALLY good reason not to.
 
+
+
 @register("geometry")
 def geom_cmd(*args):
 	"""Show the current truss geometry."""
@@ -53,15 +57,29 @@ def geom_cmd(*args):
 	state['msg'] = "Showing geometry."
 
 
+@register("new")
+def new_cmd(*args):
+    print "NEW!"
+    state = deepcopy(empty_state)
+    state['msg'] = "Created new."
+
 @register("stress")
 def stress_cmd(*args):
-	"""Plot the stress in each member."""
+    """Plot the stress indef run_statics(state):"""
 
-	import random
-	state['vis'] = deepcopy(state['geom'])
-	for m in state['vis']['edges']:
-		m['color'] = "#" + hex(random.randint(50,255))[2:4] + "0000"
-	state['msg'] = "Showing stress distribution."
+    print "1"
+    from trussmath import statics, colorize
+    stresses, deflections, reactions = statics(state)
+    print "2"
+    state['vis'] = deepcopy(state['geom'])
+    for m in state['vis']['edges']:
+
+        k = m['mid']
+        m['color'] = colorize(stresses[k], 5)
+
+    state['msg'] = "Showing stress distribution."
+
+    return state
 
 @register("move")
 def move_cmd(*args):
@@ -85,6 +103,35 @@ def node_cmd(*args):
 	nodes.append({"iid":len(nodes), "x":x, "y":y})
 	state['vis'] = deepcopy(state['geom'])
 	state['msg'] = "Successfully added node."
+
+
+@register("fix")
+def fix_cmd(*args):
+    """ fix(node, direction): 
+    node n in {n0, n1, ...}
+    direction d in {0: "x", 1: "y"}"""
+    if len(args) == 0:
+        state['msg'] = "Current fixings:\n" + str(state['bcs']['fixednodes'])
+    else:
+	node = int(args[0][1:])
+        direction = int(args[1])
+        state['bcs']['fixednodes'].append({"iid":node, "fix":direction})
+        state['msg'] = "Fixed n"+ str(node) + " in the x_"+ str(direction) + "direction." 
+    return state
+
+@register("load")
+def load_cmd(*args):
+    """load(node, direction, amount)
+    """
+    if len(args) == 0:
+        state['msg'] = "Current loadings:\n" + str(state['bcs']['loadednodes'])
+    else:
+	node = int(args[0][1:])
+        xload = int(args[1])
+        yload = int(args[2])
+        state['bcs']['loadednodes'].append({"iid":node, "x":xload, "y":yload})
+        state['msg'] = "Loaded f(n"+ str(node) + ") = " + str(xload) + "i + " + str(yload) + "j"
+    return state
 
 
 @register("edge")
@@ -113,21 +160,24 @@ def del_cmd(*args):
 	state['msg'] = "Too much trouble."
 
 
-@register("load")
-def load_cmd(*args):
+@register("open")
+def open_cmd(*args):
 	"""Loads truss f from disk."""
 
-	with (open("models/"+args[0])) as f:
-		data = f.readlines()
-		state.update(json.JSONDecoder().decode(data[0]))
-		state['msg'] = "Loaded truss at: " + args[0]
+        if len(args)==0:
+            state['msg'] = "ls functionality coming when I switch to a real database"
+        else:
+            with (open("models/"+args[0])) as f:
+                    data = f.readlines()
+                    state.update(json.JSONDecoder().decode(data[0]))
+                    state['msg'] = "Opened truss at: " + args[0]
 
 
 @register("save")
 def load_cmd(*args):
 	"""save f: Save truss under filename f."""
 
-	with (open("models/"+args[0], "w")) as f:
+    	with (open("models/"+args[0], "w")) as f:
 		data = json.JSONEncoder().encode(state)
 		f.write(data)
 		state['msg'] = "Saved truss to: " + args[0]
