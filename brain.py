@@ -59,8 +59,9 @@ def geom_cmd(*args):
 
 @register("new")
 def new_cmd(*args):
-    print "NEW!"
-    #state = deepcopy(empty_state)
+    state["geom"] = {"nodes":[], "edges":[]}
+    state["vis"] = {"nodes":[], "edges":[]}
+    state["bcs"] = {"fixednodes":[], "loadednodes":[], "loadededges":[]}
     state['msg'] = "Created new."
 
 @register("stress")
@@ -77,7 +78,7 @@ def stress_cmd(*args):
         k = m['mid']
         m['color'] = colorize(stresses[k], 5)
 
-    state['msg'] = "Showing stress distribution."
+    state['msg'] = "Showing stress distribution:\n"+str(stresses)
 
     return state
 
