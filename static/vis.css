@@ -22,7 +22,7 @@ svg .unselected {
 }
 
 #viz {
-    //height: 200px; 
+    height: 100%; 
     background-image: url("images/noisy_net.png");
 }
 
@@ -40,23 +40,32 @@ svg .unselected {
 }
 
 .container {
-    padding: 30px 30px 20px 20px;
-    margin-top: 40px;
+    //height: 400px; 
+    margin-top: 30px;
+}
+
+.page {
+    margin-top: 0px;
     margin-bottom: 20px;
     background-color: white;
-    /* border-radius: 15px; */
-    box-shadow: 0px 0px 5px #888;
+    box-shadow: 0px 0px 5px #888
+}
+
+.pagecontents {
+    padding: 10px 10px 10px 10px;
 }
 
 .title {
-    padding: 20px 30px 20px 20px;
-    margin-top: 40px;
-    margin-bottom: 20px;
     background-image: url("images/alamedastrip.jpg");
     background-size: cover;
 }
 .titletext {
     color: white;
+}
+
+
+pre,code { 
+    font-family:monospace;
 }
 
 body {

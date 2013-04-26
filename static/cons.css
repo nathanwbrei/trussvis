@@ -4,7 +4,7 @@ div.console2 {
     word-wrap: break-word;
 }
 div.console2 {
-    height: 400px;
+    height: 200px;
     overflow: auto;
 }
 div.jquery-console-inner { padding: 0.5em }

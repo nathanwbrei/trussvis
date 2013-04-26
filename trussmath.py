@@ -121,7 +121,7 @@ def colorize(stress, maxstress):
     else:
         hue = 0.66 # blue=compression
     sat = abs(stress/maxstress)
-    val = 0.5
+    val = 0.75 
     if abs(stress/maxstress) > 1:
         hue = 0.3
         sat = 1
