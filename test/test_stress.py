@@ -90,7 +90,7 @@ def test_apply_boundary_conditions():
     
 def test_results():
 
-    have_stresses, have_deflections, have_reactions = results(state2)
+    have_stresses, have_deflections, have_reactions = statics(state2)
 
     want_stresses = numpy.matrix([[1]])
     want_deflections = numpy.matrix([[0,0,1,0]]).transpose()
@@ -110,4 +110,5 @@ def test_results():
 
 
 
+def test_colorize():
 

@@ -115,13 +115,22 @@ def statics(state):
 
 
 def colorize(stress, maxstress):
-    grayness = hex(int(200*stress/maxstress+55))[2:]
-    if stress>0: 
-        return "#FF" + grayness + grayness
-#        return "#" + hex(int(255*stress/maxstress))[2:4] + "0000"
+
+    if stress>0:
+        hue = 0. # red=tension
     else:
-#        return "#0000" + hex(int(255*stress/maxstress))
-        return "#" + grayness + grayness + "FF"
+        hue = 0.66 # blue=compression
+    sat = abs(stress/maxstress)
+    val = 0.5
+    if abs(stress/maxstress) > 1:
+        hue = 0.3
+        sat = 1
+    import colorsys
+    r,g,b = colorsys.hsv_to_rgb(hue, sat, val) 
+    r = int(r*255)
+    g = int(g*255)
+    b = int(b*255)
+    return "#" + "".join(map(chr, (r,g,b))).encode('hex')
 
 
 
