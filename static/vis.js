@@ -34,6 +34,7 @@ $(document).ready(function(){
         var y = Math.round(yscale.invert(mouse[1])*1000)/1000;
 
         controller2.typer.consoleInsert(" "+x+" "+y);
+        controller2.typer.setfocus()
         });
 
     redraw()
@@ -73,6 +74,7 @@ function redraw(){
             })
         .on("click", function(d) {
             controller2.typer.consoleInsert(" e"+d['mid']);
+            controller2.typer.setfocus()
             })
         .on("mouseout", function(d) {d3.select(this).attr("stroke", d["color"] ? d["color"] : "gray")})
         .on("mouseover", function() {d3.select(this).attr("stroke","red")});
@@ -120,6 +122,7 @@ function redraw(){
             })
         .on("click", function(d) { 
             controller2.typer.consoleInsert(" n"+d['iid']);
+            controller2.typer.setfocus() 
             //d['iid']);
             })
         .on("mouseout", function(d) {d3.select(this).attr("class", "node deselected");})
