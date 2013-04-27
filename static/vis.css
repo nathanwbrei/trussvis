@@ -57,6 +57,7 @@ svg .unselected {
 
 .title {
     background-image: url("images/alamedastrip.jpg");
+    background-repeat: no-repeat;
     background-size: cover;
 }
 .titletext {
