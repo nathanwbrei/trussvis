@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
-<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
-<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
 <head>
 
     <!-- Basic Page Needs
@@ -12,19 +8,11 @@
     <meta name="description" content="">
     <meta name="author" content="Nathan Brei">
 
-    <!-- Mobile Specific Metas
-  ================================================== -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
     <!-- CSS
   ================================================== -->
     <link rel="stylesheet" href="static/stylesheets/base.css">
-    <link rel="stylesheet" href="static/stylesheets/skeleton.css">
-    <link rel="stylesheet" href="static/stylesheets/layout.css">
-
-    <link rel="stylesheet" href="static/cons.css">
     <link rel="stylesheet" href="static/vis.css">
-
+    <link rel="stylesheet" href="static/cons.css">
 
     <!--[if lt IE 9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,16 +21,12 @@
     <!-- Favicons
     ================================================== -->
     <link rel="shortcut icon" href="images/favicon.ico">
-    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
 
     <script type="text/javascript" src="static/d3/d3.v3.js"></script>
     <script type="text/javascript" src="static/jquery/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="static/jquery/jquery.console.js"></script>
-
-    <script type="text/javascript" src="static/vis.js"></script>
     <script type="text/javascript" src="static/cons.js"></script>
+    <script type="text/javascript" src="static/vis.js"></script>
 
 </head>
 <body>
@@ -54,30 +38,57 @@
 
     <!-- Delete everything in this .container and get started on your own site! -->
 
-
     <div class="container">
-        <div class="sixteen columns page title">
-            <div class="pagecontents">
-                <h1 class="remove-bottom titletext" >TrussViz</h1>
-                <h6 class="titletext">by Nathan Brei for Fun via HackerSchool</h6>
-            </div>
+        <div id="splash" class="box">
+            <h1 class="contents">TrussVis</h1>
+            <h6 class="contents">by Nathan Brei for Fun via
+                HackerSchool</h6>
         </div>
-        <div class="two-thirds column page" id="viz">
-            <svg>
-                <rect class="background" x="0" y="0" width=100% height=100%>
-            </svg>
-        </div>
-        <div class="one-third column">
+
+        <svg>
+        </svg>
+
+        <div id="geomsidebar" class="lefthand box" style="display:block;">
             <div class="feed page"></div>
-            <div class="page">
-                <div class="pagecontents">
-                    Available commands:<br>
-                    <code> node load stress help geometry fix move json edge new save open delete </code> <br>
-                Type <code>`help cmd`</code> for more info. 
-                </div>
-            </div>
         </div>
+
+        <div id="viewsidebar" class="lefthand box"> Geometry!!! </div>
+        <div id="loadsidebar" class="lefthand box"> Loadings!!! </div>
+        <div id="stresssidebar" class="lefthand box"> Stresses!! </div>
+        <div id="deflsidebar" class="lefthand box"> Deflections!!! </div>
+        <div id="collsidebar" class="lefthand box"> Collapses!!!</div>
+        <div id="optsidebar" class="lefthand box"> Optimization!!!</div>
+        <div id="srcsidebar" class="lefthand box"> Source!!!</div>
+        <div id="acctsidebar" class="lefthand box"> Account!!!</div>
         
+        <div id="codebox" class="box">
+            Code box
+        </div>
+
+        <div id="modebox" class="box">
+            <ul>
+                <li id="view">View </li>
+                <li id="geom" class="selected">Geometry </li>
+                <li id="load">Load/Fix </li>
+                <li id="stress">Stress </li>
+                <li id="defl">Deflection </li>
+                <li id="coll">Collapse </li>
+                <li id="opt">Optimize </li>
+                <li id="src">Source </li>
+                <li id="acct">Account </li>
+            </ul>
+        </div>
+
+        <div id="uppergraphbox" class="box">
+            Upper graph
+        </div>
+
+        <div id="helpbox" class="box">
+            Lower graph
+        </div>
+
+
+
     </div><!-- container -->
 
 

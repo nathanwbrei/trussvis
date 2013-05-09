@@ -4,12 +4,12 @@ div.console2 {
     word-wrap: break-word;
 }
 div.console2 {
-    height: 200px;
+    height: 600px;
     overflow: auto;
 }
 div.jquery-console-inner { padding: 0.5em }
 div.console2 div.jquery-console-prompt-box {
-    color: #444;
+    color: #aaa;
     font-family: monospace;
 }
 div.console2 div.jquery-console-focus span.jquery-console-cursor {

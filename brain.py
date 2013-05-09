@@ -78,7 +78,7 @@ def stress_cmd(*args):
         k = m['mid']
         m['color'] = colorize(stresses[k], 5)
 
-    state['msg'] = "Showing stress distribution:\n"+str(stresses)
+    state['msg'] = "Calculated statics."
 
     return state
 
