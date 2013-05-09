@@ -161,3 +161,12 @@ body {
     background-image: url("images/wild_oliva.png");
     overflow: hidden;
 }
+
+
+
+
+.x.axis line, .x.axis path, .y.axis line, .y.axis path {
+    fill: none;
+    stroke: #000;
+}
+
