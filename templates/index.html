@@ -41,6 +41,7 @@
 
     <div class="container">
         <div id="splash" class="box">
+            <div class="redbg"></div>
             <h1 class="contents">TrussVis</h1>
             <h6 class="contents">by Nathan Brei for Fun via
                 HackerSchool</h6>
@@ -49,31 +50,59 @@
         <svg>
         </svg>
 
-        <div id="geomsidebar" class="lefthand box" style="display:block;">
+        <div id="geomsidebar" class="righthand box" style="display:block;">
+            <div class="redbg"></div>
             <div class="feed page"></div>
         </div>
 
-        <div id="viewsidebar" class="lefthand box"> Geometry!!! </div>
-        <div id="loadsidebar" class="lefthand box"> Loadings!!! </div>
-        <div id="stresssidebar" class="lefthand box"> Stresses!! </div>
-        <div id="deflsidebar" class="lefthand box"> Deflections!!! </div>
-        <div id="collsidebar" class="lefthand box"> Collapses!!!</div>
-        <div id="optsidebar" class="lefthand box"> Optimization!!!</div>
-        <div id="srcsidebar" class="lefthand box"> Source!!!</div>
-        <div id="acctsidebar" class="lefthand box"> Account!!!</div>
+        <div id="viewsidebar" class="righthand box"> 
+            <div class="redbg"></div>
+            Geometry!!! 
+        </div>
+
+        <div id="loadsidebar" class="righthand box"> Loadings!!! </div>
+        <div id="stresssidebar" class="righthand box"> Stresses!! </div>
+        <div id="deflsidebar" class="righthand box"> Deflections!!! </div>
+        <div id="collsidebar" class="righthand box"> Collapses!!!</div>
+        <div id="optsidebar" class="righthand box"> Optimization!!!</div>
+        <div id="srcsidebar" class="righthand box"> Source!!!</div>
+        <div id="acctsidebar" class="righthand box"> Account!!!</div>
         
         <div id="codebox" class="box">
-            Code box
-            <div id="codebox-nodes" class="collapsible box">
-                Nodes
+            <div class="redbg"></div>
+            <div id="codebox-nodes">
+                <div class="selected expanded">Nodes</div>
                 <ul>
-                    <li> Node 0 </li>
-                    <li> Node 1 </li>
+                    <li> Node -1 </li>
+                    <li>
+                        <div class="collapsed"> Node GAKJLKh </div>
+                    </li>
+                    <li> 
+                        <div class="expanded">Node 0</div>
+                        <ul> 
+                            <li> Thickness: Good </li>
+                            <li> Stress: Bad </li>
+                        </ul>
+                    </li>
+                    <li> 
+                        <div class="collapsed">Node 1</div>
+                        <ul>
+                            <li> Thickness: Allright </li>
+                            <li> Stress: Good </li>
+                        </ul>
+                    </li>
+                    <li>
+                        Node 2
+                    </li>
+                    <li> Node 3 </li>
+                    <li>
+                        <div class="collapsed">Node 4</div>
+                    </li>
+                    <li> Node 5 </li>
                 </ul>
             </div>
-            Divider
-            <div id="codebox-edges" class="collapsible box">
-                Edges
+            <div id="codebox-edges">
+                <div class="expanded">Edges</div>
                 <ul>
                     <li> Edge 0 </li>
                     <li> Edge 1 </li>
@@ -82,6 +111,7 @@
         </div>
 
         <div id="modebox" class="box">
+            <div class="redbg"></div>
             <ul>
                 <li id="view">View </li>
                 <li id="geom" class="selected">Geometry </li>
@@ -93,10 +123,6 @@
                 <li id="src">Source </li>
                 <li id="acct">Account </li>
             </ul>
-        </div>
-
-        <div id="uppergraphbox" class="box">
-            Upper graph
         </div>
 
         <div id="helpbox" class="box">
