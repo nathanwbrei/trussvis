@@ -61,9 +61,6 @@ function changemode(newmode) {
     d3.select("#"+mode+"sidebar").style("display","block");
     
 
-    selectedNode=-1;
-    nodes = d3.select("svg").selectAll(".node");
-
     if (mode==="stress") {
         if (state['msg'] != "Calculated statics.") {
             send("stress");
@@ -73,51 +70,20 @@ function changemode(newmode) {
                 return d["color"];
             });
         }
-
-    if (mode==="geom") {
-        nodes
-            .attr("fill", "black")
-            .on("mouseout", function(d,i){
-                if (d["iid"] == selectedNode) {
-                    d3.select(this).attr("fill","fuchsia");
-                }
-                else {
-                    d3.select(this).attr("fill","black");
-                }
-            })
-            .on("mouseover", function(d,i){
-                if (d["iid"]==selectedNode) {
-                    d3.select(this).attr("fill","fuchsia");
-                }
-                else {
-                    d3.select(this).attr("fill","red");
-                }
-            })            
-            .on("click", function(d,i) {
-                if (selectedNode == -1) {
-                    selectedNode = d["iid"];
-                }
-                else {
-
-                    send("edge n"+selectedNode+" n"+d['iid']);
-                    nodes.attr("fill","black");
-                    selectedNode = d["iid"];
-                }
-                d3.select(this).attr("fill","fuchsia");
-                d3.event.stopPropagation();
-                controller2.typer.setfocus()
-            });
-        svg.on("click", function(d){
-            var mouse = d3.mouse(this);
-            var x = Math.round(xscale.invert(mouse[0])*1000)/1000;
-            var y = Math.round(yscale.invert(mouse[1])*1000)/1000;
-
-            send("node "+x+" "+y);
-            //controller2.typer.consoleInsert("node "+x+" "+y);
-            controller2.typer.setfocus()
-        });
+    switch (mode){
+        case "geom":
+            enter_geom_mode();
+            break;
+        case "stress":
+            enter_stress_mode();
+            break;
     }
+}
 
+
+function showJSON(){
+   codebox = d3.select("#srcsidebar");
+   codebox.classed("selected", "true"); 
 }
 
 
