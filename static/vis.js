@@ -61,15 +61,6 @@ function changemode(newmode) {
     d3.select("#"+mode+"sidebar").style("display","block");
     
 
-    if (mode==="stress") {
-        if (state['msg'] != "Calculated statics.") {
-            send("stress");
-        }
-        d3.selectAll('edge').transition().duration(500)
-            .attr("stroke", function(d,i) {
-                return d["color"];
-            });
-        }
     switch (mode){
         case "view":
             enter_view_mode();
@@ -83,16 +74,11 @@ function changemode(newmode) {
     }
 }
 
-
-function showJSON(){
-   codebox = d3.select("#srcsidebar");
-   codebox.classed("selected", "true"); 
-}
-
-
 function redraw(){
 
     console.log("entering redraw, repainting everything");
+    
+
     // Bind edge data to visualization via mID
     // Gives us object constancy -> nice animated transitions
     edges = svg.selectAll(".edge")
@@ -103,14 +89,6 @@ function redraw(){
     edges.enter()
         .insert("line")
         .attr("class", "edge")
-        .attr("stroke", function(d,i) {
-            color = d["color"]
-            if (color){
-                return color;
-            }
-            else
-                return "gray";
-        })
         .attr("x1", function(d, i) {
             return xscale(state['vis']['nodes'][d["i0"]]["x"]);
             })
@@ -189,7 +167,52 @@ function redraw(){
 
     nodes.exit().remove();
     changemode(mode);
+    
+    node_entries = d3.select("#nodeslist").selectAll(".toplevel");
+    node_entries.data(state.vis.nodes)
+        .enter()
+        .insert("li")
+        .attr("class","toplevel")
+
+    node_entries
+        .html(function (d){
+            var part1 =  "<div class='collapsed'>";
+            var part2 = "Node "+d.iid+" @("+d.x + ", " + d.y+")</div>";
+            var part3 = "<ul><li>Color: "+d.color + "</li><li>Food: delicious</li></ul>"
+            return part1+part2+part3; 
+        });
+    
+    edge_entries = d3.select("#edgeslist").selectAll(".toplevel");
+    edge_entries.data(state.vis.edges)
+        .enter()
+        .insert("li")
+        .attr("class", "toplevel");
+    
+    edge_entries.html(function(d) {
+            var part1 =  "<div class='collapsed'>";
+            var part2 = "Edge "+d.mid+": "+state.vis.nodes[d.i0].iid + " -> " + state.vis.nodes[d.i1].iid+")</div>";
+            var part3 = "<ul><li>Color: "+d.color + "</li><li>Food: delicious</li></ul>"
+            return part1+part2+part3; 
+        });
+
+    function collapse(d,i){
+        d3.select(this).classed("collapsed", true)
+                       .classed("expanded", false)
+                       .on("click", expand);
+        }
+    
+    function expand(d,i){
+        d3.selectAll(".toplevel").select("div")
+                .classed("expanded",false)
+                .classed("collapsed", true);
+
+        d3.select(this).classed("collapsed", false)
+                       .classed("expanded", true)
+                       .on("click", collapse);
+        }
+
+    d3.selectAll(".collapsed").on("click", expand);
+    d3.selectAll(".expanded").on("click", collapse);
+
 };
 
-
-            

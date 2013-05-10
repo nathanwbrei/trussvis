@@ -29,6 +29,7 @@
     <script type="text/javascript" src="static/vis.js"></script>
     <script type="text/javascript" src="static/geommode.js"></script>
     <script type="text/javascript" src="static/viewmode.js"></script>
+    <script type="text/javascript" src="static/stressmode.js"></script>
 </head>
 <body>
 
@@ -68,40 +69,11 @@
         <div id="codebox" class="box">
             <div id="codebox-nodes">
                 <div class="selected expanded">Nodes</div>
-                <ul>
-                    <li> Node -1 </li>
-                    <li>
-                        <div class="collapsed"> Node GAKJLKh </div>
-                    </li>
-                    <li> 
-                        <div class="expanded">Node 0</div>
-                        <ul> 
-                            <li> Thickness: Good </li>
-                            <li> Stress: Bad </li>
-                        </ul>
-                    </li>
-                    <li> 
-                        <div class="collapsed">Node 1</div>
-                        <ul>
-                            <li> Thickness: Allright </li>
-                            <li> Stress: Good </li>
-                        </ul>
-                    </li>
-                    <li>
-                        Node 2
-                    </li>
-                    <li> Node 3 </li>
-                    <li>
-                        <div class="collapsed">Node 4</div>
-                    </li>
-                    <li> Node 5 </li>
-                </ul>
+                <ul id="nodeslist"></ul>
             </div>
             <div id="codebox-edges">
                 <div class="expanded">Edges</div>
-                <ul>
-                    <li> Edge 0 </li>
-                    <li> Edge 1 </li>
+                <ul id="edgeslist">
                 </ul>
             </div>
         </div>
@@ -121,8 +93,8 @@
         </div>
 
         <div id="helpbox" class="box">
-            Lower graph
         </div>
+
 
 
 
