@@ -28,7 +28,7 @@ $(document).ready(function(){
         },
         animateScroll:true,
         promptHistory:true,
-        welcomeMessage:'Welcome to TrussViz.'
+        welcomeMessage: "Welcome! Type 'help' for help." 
     });
     controller2.promptText('open test.json');
 });

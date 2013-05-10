@@ -6,7 +6,7 @@ $(document).ready(function(){
     mode = "geom";
 
     // We store our entire state/data model here.
-    state = {"vis": {"nodes": [], "edges": []}, "geom": {"nodes": [], "edges": []}, "msg":"", "bcs": {"loadededges": [], "loadednodes": [], "fixednodes": []}}
+    state = {"vis": {"nodes": [], "edges": []}, "geom": {"nodes": [], "edges": []}, "msg":"Welcome to TrussVis!", "bcs": {"loadededges": [], "loadednodes": [], "fixednodes": []}}
 
     // Set up SVG to resize responsively. 
     // We can now pretend that SVG is always 600x400. 
@@ -57,7 +57,7 @@ function changemode(newmode) {
     d3.select("#"+mode).classed("selected", true);
     
     // turn off any visible sidebars, turn on current sidebar
-    d3.selectAll(".lefthand").style("display","none");
+    d3.selectAll(".righthand").style("display","none");
     d3.select("#"+mode+"sidebar").style("display","block");
     
 
@@ -71,6 +71,9 @@ function changemode(newmode) {
             });
         }
     switch (mode){
+        case "view":
+            enter_view_mode();
+            break;
         case "geom":
             enter_geom_mode();
             break;
@@ -89,6 +92,7 @@ function showJSON(){
 
 function redraw(){
 
+    console.log("entering redraw, repainting everything");
     // Bind edge data to visualization via mID
     // Gives us object constancy -> nice animated transitions
     edges = svg.selectAll(".edge")

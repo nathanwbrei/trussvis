@@ -11,6 +11,7 @@
 
 
 function enter_view_mode() {
-    edges = d3.selectAll('.edge');
-    edges.attr("fill", "brown");
+    edges = d3.selectAll('.edge').attr("stroke", "white");
+    console.log("Entered view mode, repainted edges.");
 }
+
