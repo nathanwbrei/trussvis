@@ -76,13 +76,13 @@ function changemode(newmode) {
 
 function redraw(){
 
-    console.log("entering redraw, repainting everything");
+    console.log("Redrawing...");
     
 
     // Bind edge data to visualization via mID
     // Gives us object constancy -> nice animated transitions
     edges = svg.selectAll(".edge")
-        .data(state['vis']['edges'], function(d){return d['mid']});
+        .data(state.vis.edges, function(d){return d['mid']});
 
     // Enter function for edges.
     // Formats each incoming edge
@@ -105,8 +105,6 @@ function redraw(){
             controller2.typer.consoleInsert(" e"+d['mid']);
             controller2.typer.setfocus()
             })
-        //.on("mouseout", function(d) {d3.select(this).attr("stroke", d["color"] ? d["color"] : "gray")})
-        //.on("mouseover", function() {d3.select(this).attr("stroke","red")});
 
     // Nothing fancy for transitions or exits yet
     edges.transition().duration(500)
@@ -166,10 +164,9 @@ function redraw(){
             });
 
     nodes.exit().remove();
-    changemode(mode);
     
-    node_entries = d3.select("#nodeslist").selectAll(".toplevel");
-    node_entries.data(state.vis.nodes)
+    node_entries = d3.select("#nodeslist").selectAll(".toplevel")
+        .data(state.vis.nodes)
         .enter()
         .insert("li")
         .attr("class","toplevel")
@@ -181,9 +178,10 @@ function redraw(){
             var part3 = "<ul><li>Color: "+d.color + "</li><li>Food: delicious</li></ul>"
             return part1+part2+part3; 
         });
+  
     
-    edge_entries = d3.select("#edgeslist").selectAll(".toplevel");
-    edge_entries.data(state.vis.edges)
+    edge_entries = d3.select("#edgeslist").selectAll(".toplevel")
+        .data(state.vis.edges)
         .enter()
         .insert("li")
         .attr("class", "toplevel");
@@ -213,6 +211,7 @@ function redraw(){
 
     d3.selectAll(".collapsed").on("click", expand);
     d3.selectAll(".expanded").on("click", collapse);
+    changemode(mode);
 
 };
 

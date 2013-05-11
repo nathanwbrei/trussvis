@@ -195,7 +195,7 @@
     text-decoration: underline;
 }
 
-#helpbox {
+.righthand {
     width: 20em;
     height: 16em;
     position: absolute;
@@ -203,7 +203,7 @@
     left: 66em;
 }
 
-.righthand {
+#helpbox {
     width: 20em;
     height: 16em;
     position: absolute;

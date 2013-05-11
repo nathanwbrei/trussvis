@@ -18,14 +18,15 @@ function enter_geom_mode(){
         .on("drag", on_node_drag);
 
     d3.selectAll(".node")
-        .attr("fill", "black")
         .on("mouseout", on_node_mouseout) 
         .on("mouseover", on_node_mouseover)
         .on("click", on_node_click)
         .call(drag);
 
     d3.selectAll(".edge")
-        .attr("fill","gray");
+        .transition()
+        .duration(500)
+        .attr("stroke","gray");
 
     d3.select("svg")
         .on("click", on_bg_click);
@@ -91,7 +92,5 @@ function on_node_drag(d,i) {
     console.log("Data now "+ d.x + ", " + d.y);
     console.log("JSON now "+state['geom']['nodes'][i]['x']);
 }
-
-
 
 
