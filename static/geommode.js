@@ -18,14 +18,14 @@ function enter_geom_mode(){
         .on("drag", on_node_drag);
 
     d3.selectAll(".node")
-        .on("mouseout", on_node_mouseout) 
+        .on("mouseout", on_node_mouseout)
         .on("mouseover", on_node_mouseover)
         .on("click", on_node_click)
         .call(drag);
 
     d3.selectAll(".edge")
         .transition()
-        .duration(500)
+        .duration(100)
         .attr("stroke","gray");
 
     d3.select("svg")
