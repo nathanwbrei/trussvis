@@ -80,6 +80,35 @@ def trussvis():
     print "--> "+brain.state['msg']
     return returndata
 
+@app.route("/trussvis/stress", methods=['POST'])
+def stress_cmd():
+    """Perform the complete static analysis"""
+
+    state = State().from_json(request.data)
+    from trussmath import statics
+    stresses, deflections, reactions = statics(state)
+    state['msg'] = "Calculated statics."
+    return state.to_json()
+
+@app.route("/trussvis/open", methods=['POST'])
+def open_cmd():
+    """Loads truss f from disk."""
+    filename = json.JSONDecoder().decode(request.data)["filename"] 
+    with (open("models/"+args[0])) as f:
+        data = f.readlines()
+        state = State().from_json(json.JSONDecoder().decode(data[0]))
+        state.msg = "Opened truss at: " + args[0]
+
+
+@register("save")
+def save_cmd():
+    """save f: Save truss under filename f."""
+    
+    state = State().from_json(request.data) 
+    with (open("models/"+state.name, "w")) as f:
+        f.write(state.to_json())
+        state.msg = "Saved truss to: " + state.name 
+    return state.to_json()
 
 @app.route('/', methods=['GET'])
 def mainpage():
