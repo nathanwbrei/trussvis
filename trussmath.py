@@ -3,11 +3,9 @@ import math
 import numpy
 
 # Remember, our coordgraph is stored as:
-
-# state = {"geom" : {"nodes":[], "edges":[]}, 
-# 		 "vis"  : {"nodes":[], "edges":[]},
-# 		 "bcs"  : {"fixednodes":[], "loadednodes":[], "loadededges":[]},
-# 		 "msg"  :  "" }
+# state = {
+    "nodes": [{"id":22, "x":5, "y":10}...], 
+    "edges": [{"id":49, "n0":22, "n1":23], "msg":"" }
 
 
 def make_difference_matrix(state):
