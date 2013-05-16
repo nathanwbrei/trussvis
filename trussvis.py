@@ -6,7 +6,6 @@ from flask_oauth import OAuth
 import json
 import sys
 import argparse
-import brain
 
 app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
@@ -69,46 +68,42 @@ def get_facebook_oauth_token():
     return session.get('oauth_token')
 
 
-@app.route('/trussvis', methods=['POST'])
-def trussvis():
+jsondecoder = json.JSONDecoder()
+def decode(data):
+    return jsondecoder.decode(data)
 
-    data = json.JSONDecoder().decode(request.data)
-    print "> "+data['line']
-    brain.dispatch(*data['line'].split())
-
-    returndata = json.JSONEncoder().encode(brain.state)
-    print "--> "+brain.state['msg']
-    return returndata
+jsonencoder = json.JSONEncoder()
+def encode(data):
+    return jsonencoder.encode(data)
 
 @app.route("/trussvis/stress", methods=['POST'])
 def stress_cmd():
     """Perform the complete static analysis"""
 
-    state = State().from_json(request.data)
+    state = decode(request.data) 
     from trussmath import statics
     stresses, deflections, reactions = statics(state)
     state['msg'] = "Calculated statics."
-    return state.to_json()
+    return encode(state)
 
 @app.route("/trussvis/open", methods=['POST'])
 def open_cmd():
     """Loads truss f from disk."""
-    filename = json.JSONDecoder().decode(request.data)["filename"] 
+    filename = decode(request.data)["filename"] 
     with (open("models/"+args[0])) as f:
         data = f.readlines()
-        state = State().from_json(json.JSONDecoder().decode(data[0]))
-        state.msg = "Opened truss at: " + args[0]
+        state = encode(data) 
+        state['msg'] = "Opened truss at: " + args[0]
 
-
-@register("save")
+@app.route("/trussvis/save", methods=['POST'])
 def save_cmd():
     """save f: Save truss under filename f."""
     
-    state = State().from_json(request.data) 
-    with (open("models/"+state.name, "w")) as f:
-        f.write(state.to_json())
-        state.msg = "Saved truss to: " + state.name 
-    return state.to_json()
+    state = decode(request.data) 
+    with (open("models/"+state['name'], "w")) as f:
+        f.write(encode(state))
+        state['msg'] = "Saved truss to: " + state['name']
+    return encode(state)
 
 @app.route('/', methods=['GET'])
 def mainpage():

@@ -2,15 +2,9 @@
 import math 
 import numpy
 
-# Remember, our coordgraph is stored as:
-# state = {
-    "nodes": [{"id":22, "x":5, "y":10}...], 
-    "edges": [{"id":49, "n0":22, "n1":23], "msg":"" }
-
-
 def make_difference_matrix(state):
 
-	edges, nodes = state["geom"]["edges"], state["geom"]["nodes"]
+	edges, nodes = state["edges"], state["nodes"]
 
 	# Node displacements u => Edge elongations d
 	A = numpy.zeros([len(edges), 2*len(nodes)])
@@ -40,7 +34,7 @@ def make_difference_matrix(state):
 
 def make_constitutive_matrix(state):
 	#  Edge elongations d => Edge tensions w
-	edges = state["geom"]["edges"]
+	edges = state["edges"]
 	C = numpy.zeros([len(edges), len(edges)])
 	for e in edges:
 		mid = e['mid']
@@ -63,7 +57,7 @@ def apply_boundary_conditions(state, A, C):
 
 
     # Calculate the forcing vector
-    nodes = state["geom"]["nodes"]
+    nodes = state["nodes"]
     f = numpy.matrix(numpy.zeros(2*len(nodes))).transpose()
     for b in state['bcs']['loadednodes']:
         f[2*b['iid']] += b['x']
